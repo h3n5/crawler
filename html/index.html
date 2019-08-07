@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  </head>
+  <body>
+    <div id="app">
+      {{ message }}
+      <ul>
+        <li v-for="(item, index) in list" :key="index">
+          <a :href="'http://'+ item.url" target="_blank">
+            {{ item.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </body>
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+        message: "Hello Vue!",
+        list: [],
+        total: 0
+      },
+      created() {
+        fetch("http://localhost:4444", {
+          mode: "cors"
+        })
+          .then(res => res.json())
+          .then(data => {
+            this.list = data.data
+            this.total = data.total
+          })
+      }
+    })
+  </script>
+</html>
