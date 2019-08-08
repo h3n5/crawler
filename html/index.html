@@ -6,10 +6,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!-- import stylesheet -->
+    <link rel="stylesheet" href="http://unpkg.com/iview/dist/styles/iview.css" />
+    <!-- import iView -->
+    <script src="http://unpkg.com/iview/dist/iview.min.js"></script>
+    <style>
+      .center {
+        display: flex;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
     <div id="app">
       {{ message }}
+      <i-Menu mode="horizontal" active-name="v2ex" @on-select="select" class="center">
+        <Menu-Item v-for="item in allType" :key="item" :name="item">
+          <p>{{ item }}</p>
+        </Menu-Item>
+      </i-Menu>
       <ul>
         <li v-for="(item, index) in list" :key="index">
           <a :href="'http://'+ item.url" target="_blank">
@@ -25,7 +40,9 @@
       data: {
         message: "Hello Vue!",
         list: [],
-        total: 0
+        total: 0,
+        allType: [],
+        hotList: {}
       },
       created() {
         fetch(`http://localhost:4444?t=${+new Date()}`, {
@@ -35,7 +52,26 @@
           .then(data => {
             this.list = data.data
             this.total = data.total
+
+            this.list.forEach(v => {
+              if (this.hotList[v.type]) {
+                this.hotList[v.type].list.push(v)
+                this.hotList[v.type].total++
+              } else {
+                this.allType.push(v.type)
+                this.$set(this.hotList, v.type, {
+                  list: [v],
+                  total: 1
+                })
+              }
+            })
+            console.log(this.hotList)
           })
+      },
+      methods: {
+        select(v) {
+          console.log(v)
+        }
       }
     })
   </script>

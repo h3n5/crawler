@@ -41,7 +41,7 @@ module.exports = [
         let url = host + temp.attr("href")
         let name = temp.children("span").text()
         let type = "weibo"
-        res.push({ url, name })
+        res.push({ url, name, type })
       })
     }
     return res

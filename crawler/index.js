@@ -8,7 +8,7 @@ let spiders = funcs.map(async func => {
 
 Promise.all(spiders).then(res => {
   // 初始化json
-  initSaveFile(path.resolve(__dirname, "../data/result.json")).then(async () => {
+  initSaveFile(path.resolve(__dirname, "../data/result.json")).then(() => {
     // 写入json
     async function write(array) {
       for (let index = 0; index < array.length; index++) {

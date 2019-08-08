@@ -8,7 +8,8 @@ const proxy = http.createServer(function(req, res) {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "text/html; charset=utf-8"
   })
-  res.end(fs.readFileSync(path.resolve(__dirname, "../data/result.json")))
+  const data = fs.readFileSync(path.resolve(__dirname, "../data/result.json"))
+  res.end(data)
 })
 proxy.on("error", e => {
   console.log("出错了" + e)
