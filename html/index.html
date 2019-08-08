@@ -28,7 +28,7 @@
         total: 0
       },
       created() {
-        fetch("http://localhost:4444", {
+        fetch(`http://localhost:4444?t=${+new Date()}`, {
           mode: "cors"
         })
           .then(res => res.json())
