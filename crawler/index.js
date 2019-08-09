@@ -6,16 +6,16 @@ let spiders = funcs.map(async func => {
   return await func()
 })
 
-Promise.all(spiders).then(res => {
+let target = path.resolve(__dirname, "../data/result.json")
+Promise.all(spiders).then(async res => {
   // 初始化json
-  initSaveFile(path.resolve(__dirname, "../data/result.json")).then(() => {
-    // 写入json
-    async function write(array) {
-      for (let index = 0; index < array.length; index++) {
-        const element = array[index]
-        await writeJson(element, path.resolve(__dirname, "../data/result.json"))
-      }
+  await initSaveFile(target)
+  // 写入json
+  async function write(array) {
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index]
+      await writeJson(element, target)
     }
-    write(res)
-  })
+  }
+  await write(res)
 })

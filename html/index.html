@@ -15,20 +15,31 @@
         display: flex;
         justify-content: center;
       }
+      .hot-list {
+        width: 600px;
+        margin: auto;
+      }
+      .hot-list-item {
+        padding: 10px;
+        list-style: none;
+        font-size: 16px;
+      }
     </style>
   </head>
   <body>
     <div id="app">
-      {{ message }}
       <i-Menu mode="horizontal" active-name="v2ex" @on-select="select" class="center">
-        <Menu-Item v-for="item in allType" :key="item" :name="item">
-          <p>{{ item }}</p>
+        <Menu-Item v-for="(item,i) in allType" :key="item" :name="item">
+          <p>
+            {{ item }}
+            <Badge :count="hotList[item].list.length"  type="info"> </Badge>
+          </p>
         </Menu-Item>
       </i-Menu>
-      <ul>
-        <li v-for="(item, index) in list" :key="index">
-          <a :href="'http://'+ item.url" target="_blank">
-            {{ item.name }}
+      <ul class="hot-list">
+        <li v-for="(item, index) in recentList" :key="index" class="hot-list-item">
+          <a :href="(item.url.includes('http')?'':'http://')+ item.url" target="_blank">
+            {{ index + 1 + "  " + item.name }}
           </a>
         </li>
       </ul>
@@ -37,12 +48,18 @@
   <script>
     var app = new Vue({
       el: "#app",
+      devtools: true,
       data: {
-        message: "Hello Vue!",
+        type: "v2ex",
         list: [],
         total: 0,
         allType: [],
         hotList: {}
+      },
+      computed: {
+        recentList() {
+          return this.hotList[this.type] ? this.hotList[this.type].list : []
+        }
       },
       created() {
         fetch(`http://localhost:4444?t=${+new Date()}`, {
@@ -52,7 +69,6 @@
           .then(data => {
             this.list = data.data
             this.total = data.total
-
             this.list.forEach(v => {
               if (this.hotList[v.type]) {
                 this.hotList[v.type].list.push(v)
@@ -65,12 +81,11 @@
                 })
               }
             })
-            console.log(this.hotList)
           })
       },
       methods: {
         select(v) {
-          console.log(v)
+          this.type = v
         }
       }
     })
